@@ -1,38 +1,26 @@
 import './App.css';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import useLogic from './useLogic';
 
 
 function App() {
 
-  const [words, setWords] = useState('')
-
-  function handleChange(e){
-    const{name, value} = e.target
-    setWords(value)
-  }
-
-  function wordCount(){
-    let wordsArray = words.split(' ')
-    let nonBlackWords=[]
-    for(let word of wordsArray){
-      if(word !==''){
-        nonBlackWords.push(word)
-      }
-    }
-    console.log(nonBlackWords.length)
-  }
+  const {handleChange, wordsTyped, beginGame, timeRemainig,words, hasStarted, textareaRef} = useLogic()
+  //const textareaRef = useRef(null)
 
   return (
     <div className="App">
       <h1>Speed Typing Game</h1>
-      <textarea 
+      <textarea
+        ref={textareaRef} 
         name='text'
-        value={words.value}
+        disabled={!timeRemainig}
+        value={words}
         onChange={handleChange}
       />
-      <h4>Time Remaining</h4>
-      <button onClick={wordCount}>Start</button>
-      <h1>Word Count</h1>
+      <h4>Time Remaining: {timeRemainig}</h4>
+      <button  disabled={hasStarted} onClick={beginGame}>Start</button>
+      <h1>Word Count: {!timeRemainig?wordsTyped:''}</h1>
     </div>
   );
 }
